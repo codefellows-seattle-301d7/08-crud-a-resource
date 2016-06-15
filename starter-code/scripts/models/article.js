@@ -121,7 +121,7 @@
   Article.truncateTable = function() {
     webDB.execute(
       // TODO: Use correct SQL syntax to delete all records from the articles table.
-      'TRUNCATE TABLE articles;' // <----finish the command here, inside the quotes.
+      'DELETE FROM articles;' // <----finish the command here, inside the quotes.
     );
   };
 
@@ -172,5 +172,6 @@
   };
 // TODO: ensure that our table has been setup.
   Article.createTable();
+
   module.Article = Article;
 })(window);
