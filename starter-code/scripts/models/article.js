@@ -21,7 +21,7 @@
   // Set up a DB table for articles.
   Article.createTable = function() {
     webDB.execute(
-      'CREATE TABLE IF NOT EXISTS articles_table (title VARCHAR, category VARCHAR, author VARCHAR, authorUrl VARCHAR, publishedOn DATE, body TEXT);', // TODO: What SQL command do we run here inside these quotes?
+      'CREATE TABLE IF NOT EXISTS articles_table (id INTEGER PRIMARY KEY, title VARCHAR, category VARCHAR, author VARCHAR, authorUrl VARCHAR, publishedOn DATE, body TEXT);', // TODO: What SQL command do we run here inside these quotes?
       function() {
         console.log('Successfully set up the articles table.');
       }
@@ -59,7 +59,7 @@
             /* TODO:
                1 - 'insert' the newly-instantiated article in the DB:
                 (hint: what can we call on this article instance?). */
-            Article.insertRecord();
+            article.insertRecord();
           });
           // Now get ALL the records out the DB, with their database IDs:
           webDB.execute('SELECT * FROM articles_table', function(rows) { // TODO: select our now full table
@@ -103,6 +103,7 @@
   };
 
   Article.prototype.deleteRecord = function() {
+    console.log(this.id);
     webDB.execute(
       [
         {
@@ -119,7 +120,7 @@
   Article.truncateTable = function() {
     webDB.execute(
       // TODO: Use correct SQL syntax to delete all records from the articles table.
-      'DELETE * FROM articles_table;' // <----finish the command here, inside the quotes.
+      'DELETE FROM articles_table;' // <----finish the command here, inside the quotes.
     );
   };
 
