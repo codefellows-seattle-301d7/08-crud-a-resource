@@ -21,7 +21,7 @@
   // Set up a DB table for articles.
   Article.createTable = function() {
     webDB.execute(
-      'CREATE TABLE IF NOT EXISTS articles (id INTEGER PRIMARY KEY, title VARCHAR(255), author VARCHAR(255), authorUrl VARCHAR(255), category VARCHAR(20), publishedOn DATETIME, body TEXT NOT NULL;', // TODO: What SQL command do we run here inside these quotes?
+      'CREATE TABLE IF NOT EXISTS articles (id INTEGER PRIMARY KEY, title VARCHAR(255), author VARCHAR(255), authorUrl VARCHAR(255), category VARCHAR(20), publishedOn DATETIME, body TEXT NOT NULL);', // TODO: What SQL command do we run here inside these quotes?
       function() {
         console.log('Successfully set up the articles table.');
       }
@@ -171,6 +171,6 @@
     };
   };
 // TODO: ensure that our table has been setup.
-
+  Article.createTable();
   module.Article = Article;
 })(window);
