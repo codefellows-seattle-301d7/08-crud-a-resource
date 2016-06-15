@@ -49,7 +49,7 @@
            1 - Use Article.loadAll to instanitate these rows,
            2 - Pass control to the view by calling the next function that
                 was passed in to Article.fetchAll */
-        article.loadAll(rows);
+        Article.loadAll(rows);
         nextFunction();
       } else {
         $.getJSON('/data/hackerIpsum.json', function(responseData) {
@@ -59,14 +59,14 @@
             /* TODO:
                1 - 'insert' the newly-instantiated article in the DB:
                 (hint: what can we call on this article instance?). */
-            article.insertRecord();
+            Article.insertRecord();
           });
           // Now get ALL the records out the DB, with their database IDs:
           webDB.execute('SELECT * FROM articles_table', function(rows) { // TODO: select our now full table
             // TODO:
             // 1 - Use Article.loadAll to generate our rows,
             // 2 - Pass control to the view by calling the next function that was passed in to Article.fetchAll
-            article.loadAll(rows);
+            Article.loadAll(rows);
             nextFunction();
           });
         });
@@ -80,7 +80,7 @@
         {
           // TODO: Insert an article instance into the database:
           // NOTE: this method will be called elsewhere after we retrieve our JSON
-          'sql': '...;', // <----- complete our SQL command here, inside the quotes.
+          'sql': 'INSERT INTO articles_table (title, author, authorUrl, category, publishedOn, body) VALUES (?, ?, ?, ?, ?, ?);', // <----- complete our SQL command here, inside the quotes.
           'data': [this.title, this.author, this.authorUrl, this.category, this.publishedOn, this.body]
         }
       ]
@@ -95,7 +95,7 @@
               its properties into the corresponding record in the database: */
           /* Note: this is an advanced admin option, so you will need to test
               out an individual query in the console */
-          'sql': '...;', // <---- complete the command here, inside the quotes;
+          'sql': 'UPDATE articles_table SET title = ?, author = ?, authorUrl = ?, category = ?, publishedOn = ?, body = ? WHERE id = ?;', // <---- complete the command here, inside the quotes;
           'data': [this.title, this.author, this.authorUrl, this.category, this.publishedOn, this.body, this.id]
         }
       ]
@@ -109,7 +109,7 @@
           // TODO: Delete an article instance from the database based on its id:
           /* Note: this is an advanced admin option, so you will need to test
               out an individual query in the console */
-          'sql': '...;', // <--- complete the command here, inside the quotes;
+          'sql': 'DELETE FROM articles_table WHERE id = ?;', // <--- complete the command here, inside the quotes;
           'data': [this.id]
         }
       ]
@@ -119,7 +119,7 @@
   Article.truncateTable = function() {
     webDB.execute(
       // TODO: Use correct SQL syntax to delete all records from the articles table.
-      'DELETE ...;' // <----finish the command here, inside the quotes.
+      'DELETE * FROM articles_table;' // <----finish the command here, inside the quotes.
     );
   };
 
@@ -169,6 +169,6 @@
     };
   };
 // TODO: ensure that our table has been setup.
-
+  Article.createTable();
   module.Article = Article;
 })(window);
