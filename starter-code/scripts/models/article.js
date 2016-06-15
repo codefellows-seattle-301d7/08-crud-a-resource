@@ -21,7 +21,7 @@
   // Set up a DB table for articles.
   Article.createTable = function() {
     webDB.execute(
-      'CREATE TABLE IF NOT EXISTS articles (id INTEGER PRIMARY KEY, title VARCHAR(50), author VARCHAR(50), authorUrl VARCHAR(50), category VARCHAR(50), publishedOn VARCHAR(50), body VARCHAR(50));', // TODO: What SQL command do we run here inside these quotes?
+      'CREATE TABLE IF NOT EXISTS articles (id INTEGER PRIMARY KEY, title VARCHAR(50), author VARCHAR(50), authorUrl VARCHAR(50), category VARCHAR(50), publishedOn DATE, body VARCHAR(50));', // TODO: What SQL command do we run here inside these quotes?
       function() {
         console.log('Successfully set up the articles table.');
       }
@@ -43,12 +43,14 @@
         (most recent article first!), and then hand off control to the View.
       Otherwise (if the DB is empty) we need to retrieve the JSON and process it. */
 
-    webDB.execute('...', function(rows) { // TODO: fill these quotes to 'select' our table.
+    webDB.execute('SELECT * FROM articles ORDER BY publishedOn DESC', function(rows) { // TODO: fill these quotes to 'select' our table.
       if (rows.length) {
         /* TODO:
            1 - Use Article.loadAll to instanitate these rows,
            2 - Pass control to the view by calling the next function that
                 was passed in to Article.fetchAll */
+        Article.loadAll(rows);
+        nextFunction();
 
       } else {
         $.getJSON('/data/hackerIpsum.json', function(responseData) {
@@ -58,13 +60,15 @@
             /* TODO:
                1 - 'insert' the newly-instantiated article in the DB:
                 (hint: what can we call on this article instance?). */
-
+            article.insertRecord();
           });
           // Now get ALL the records out the DB, with their database IDs:
-          webDB.execute('', function(rows) { // TODO: select our now full table
+          webDB.execute('SELECT * FROM articles', function(rows) { // TODO: select our now full table
             // TODO:
             // 1 - Use Article.loadAll to generate our rows,
             // 2 - Pass control to the view by calling the next function that was passed in to Article.fetchAll
+            Article.loadAll(rows);
+            nextFunction();
 
           });
         });
@@ -107,7 +111,7 @@
           // TODO: Delete an article instance from the database based on its id:
           /* Note: this is an advanced admin option, so you will need to test
               out an individual query in the console */
-          'sql': 'DELETE FROM articles (id) VALUES (?) WHERE id = ?;', // <--- complete the command here, inside the quotes;
+          'sql': 'DELETE FROM articles WHERE id = ?;', // <--- complete the command here, inside the quotes;
           'data': [this.id]
         }
       ]
@@ -117,7 +121,7 @@
   Article.truncateTable = function() {
     webDB.execute(
       // TODO: Use correct SQL syntax to delete all records from the articles table.
-      'DELETE * FROM articles;' // <----finish the command here, inside the quotes.
+      'TRUNCATE TABLE articles;' // <----finish the command here, inside the quotes.
     );
   };
 
